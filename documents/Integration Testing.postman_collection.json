@@ -1,0 +1,1616 @@
+{
+	"info": {
+		"_postman_id": "2e61db96-fa13-4999-8228-e488f7f6aa5b",
+		"name": "Integration Testing",
+		"description": "# Spot API Integration Tests\n\nThis Postman collection covers all major endpoints for the Spot API, including:\n- Authentication and user sessions\n- Spots and their follow/unfollow mechanisms\n- Events and invitation systems\n- Feed and notification retrieval\n- Comments and interactions\n\nUse this collection to test and validate API behavior in a real-world context.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29520068"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register --user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 200 OK status\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"utente_123\",\n    \"password\": \"verysecret\",\n    \"email\": \"iTest@this.app.too\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "This request un-registers a token by using the token collection variable in the POST body.\n\nWe also added a test to ensure the response has a 200 OK status code."
+					},
+					"response": []
+				},
+				{
+					"name": "register --admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 200 OK status\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin_123\",\n    \"password\": \"verysecret\",\n    \"email\": \"iTest@this.app\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "This request un-registers a token by using the token collection variable in the POST body.\n\nWe also added a test to ensure the response has a 200 OK status code."
+					},
+					"response": []
+				},
+				{
+					"name": "login --admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin_123\",\n    \"password\": \"verysecret\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+					},
+					"response": []
+				},
+				{
+					"name": "login --user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"utente_123\",\n    \"password\": \"verysecret\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "follow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/follow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "follow -- friendship",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/2/follow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"2",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unfollow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/unfollow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"unfollow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/search?query=test",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "friends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/friends",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"friends"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "friend spots",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/2/spots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"2",
+								"spots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "friend events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "friend followers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/followers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"followers"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "X-Session-Token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "spots",
+			"item": [
+				{
+					"name": "get all in range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots?lat=50.0&lng=50.0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "50.0"
+								},
+								{
+									"key": "lng",
+									"value": "50.0"
+								},
+								{
+									"key": "meters",
+									"value": "100000",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nearest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/nearest?lat=51.0&lng=51.0&meters=100000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"nearest"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "51.0"
+								},
+								{
+									"key": "lng",
+									"value": "51.0"
+								},
+								{
+									"key": "meters",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"50 e 50\",\n    \"description\": \"fifty fofty\",\n    \"lat\": 50,\n    \"lng\": 50,\n    \"privacy\": \"PUBLIC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/spots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new --private",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"50 e 50\",\n    \"description\": \"fifty fofty\",\n    \"lat\": 50,\n    \"lng\": 50,\n    \"privacy\": \"INVITE_ONLY\",\n    \"invitedUsers\": [1,2]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/spots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new --friends",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"50 e 50\",\n    \"description\": \"fifty fofty\",\n    \"lat\": 50,\n    \"lng\": 50,\n    \"privacy\": \"FRIEND_ONLY\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/spots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"51 e 51\",\n    \"lat\": 51,\n    \"lng\": 51\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/spots/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "follow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/1/follow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"1",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unfollow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/2/unfollow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"2",
+								"unfollow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "followers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/1/followers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"1",
+								"followers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invited",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/spots/2/invited",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"spots",
+								"2",
+								"invited"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "X-Session-Token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "events",
+			"item": [
+				{
+					"name": "info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate random lines from Postman dynamic variable",
+									"const rawLines = pm.variables.replaceIn(\"{{$randomLoremLines}}\");",
+									"",
+									"// Escape line breaks for JSON",
+									"const escapedDescription = rawLines.replace(/\\n/g, \"\\\\n\");",
+									"",
+									"// Save to a variable for use in request body",
+									"pm.variables.set(\"escapedDescription\", escapedDescription);",
+									"",
+									"// Optional: Log to console for debugging",
+									"console.log(\"Raw:\", rawLines);",
+									"console.log(\"Escaped:\", escapedDescription);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"{{$randomLoremSentence}}\",\n    \"description\": \"{{escapedDescription}}\",\n    \"privacy\": \"PUBLIC\",\n    \"date\": \"2026-06-12T08:44:21\",\n    \"spotId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new --private",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate random lines from Postman dynamic variable",
+									"const rawLines = pm.variables.replaceIn(\"{{$randomLoremLines}}\");",
+									"",
+									"// Escape line breaks for JSON",
+									"const escapedDescription = rawLines.replace(/\\n/g, \"\\\\n\");",
+									"",
+									"// Save to a variable for use in request body",
+									"pm.variables.set(\"escapedDescription\", escapedDescription);",
+									"",
+									"// Optional: Log to console for debugging",
+									"console.log(\"Raw:\", rawLines);",
+									"console.log(\"Escaped:\", escapedDescription);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"{{$randomLoremSentence}}\",\n    \"description\": \"{{escapedDescription}}\",\n    \"privacy\": \"INVITE_ONLY\",\n    \"date\": \"2026-06-12T08:44:21\",   \n    \"spotId\": 1,\n    \"invitedUsers\": [1, 2]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new --friends",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate random lines from Postman dynamic variable",
+									"const rawLines = pm.variables.replaceIn(\"{{$randomLoremLines}}\");",
+									"",
+									"// Escape line breaks for JSON",
+									"const escapedDescription = rawLines.replace(/\\n/g, \"\\\\n\");",
+									"",
+									"// Save to a variable for use in request body",
+									"pm.variables.set(\"escapedDescription\", escapedDescription);",
+									"",
+									"// Optional: Log to console for debugging",
+									"console.log(\"Raw:\", rawLines);",
+									"console.log(\"Escaped:\", escapedDescription);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"{{$randomLoremSentence}}\",\n    \"description\": \"{{escapedDescription}}\",\n    \"privacy\": \"FRIEND_ONLY\",\n    \"date\": \"2026-06-12T08:44:21\",\n    \"spotId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"{{$randomLoremSentence}}\",\n    \"description\": \"{{$randomLoremLines}}\",\n    \"privacy\": \"PUBLIC\",\n    \"date\": \"2026-06-12T08:44:21\",\n    \"spotId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "follow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/1/follow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unfollow",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/1/unfollow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1",
+								"unfollow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "followers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/1/followers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1",
+								"followers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invited",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/2/invited",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"2",
+								"invited"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "X-Session-Token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"hello comment!\",\n    \"date\": \"2026-06-12T08:44:21\",\n    \"eventId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"hello edited comment!\",\n    \"date\": \"2026-06-12T08:44:21\",\n    \"eventId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comments/event/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"event",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "X-Session-Token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "feed",
+			"item": [
+				{
+					"name": "feed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/feed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"feed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/feed/notifications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"feed",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/feed/notifications/read",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"feed",
+								"notifications",
+								"read"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "X-Session-Token",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "mock",
+			"item": [
+				{
+					"name": "Create mock user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{$randomFirstName}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"email\": \"{{$randomExampleEmail}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "This request shows an example of generating mock user data in the request body. You can use this to populate some users for testing your API or application, or to ensure that your API accepts a range of inputs within certain parameters."
+					},
+					"response": []
+				},
+				{
+					"name": "Create test user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    // Set the collection-scope \"token\" variable to the token received from the API",
+									"    // This lets us use it in other requests",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testUser\",\n    \"password\": \"verysecret\",\n    \"email\": \"iTest@this.app\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "This request shows an example of generating mock user data in the request body. You can use this to populate some users for testing your API or application, or to ensure that your API accepts a range of inputs within certain parameters."
+					},
+					"response": []
+				},
+				{
+					"name": "Create mock spot",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{$guid}}\",\n    \"payment\": {\n        \"cardNumber\": \"{{$randomCreditCardMask}}\",\n        \"currency\": \"{{$randomCurrencyCode}}\",\n        \"amount\": {{$randomInt}},\n        \"confirmed\": \"{{$randomBoolean}}\",\n        \"confirmedAt\": \"{{$isoTimestamp}}\"\n    },\n    \"basket\": [\n        {\n            \"id\": \"{{$guid}}\",\n            \"quantity\": {{$randomInt}}\n        },\n        {\n            \"id\": \"{{$guid}}\",\n            \"quantity\": {{$randomInt}}\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/post",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"post"
+							]
+						},
+						"description": "This request shows an example of generating mock purchase details in the request body. It demonstrates a few finance-related dynamic variables, in addition to the ones for random ID, Integer, Boolean, and Timestamp."
+					},
+					"response": []
+				},
+				{
+					"name": "Create mock event",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Use a dynamic variable in script",
+									"// https://learning.postman.com/docs/writing-scripts/script-references/variables-list/",
+									"const loremParagraphs = pm.variables.replaceIn(\"{{$randomLoremParagraphs}}\");",
+									"",
+									"// $randomLoremParagraphs generates a string with multiple paragraphs separated by ",
+									"// newline control characters (\"\\n\"). Since we're using this in a JSON object, we ",
+									"// need to replace the newline control character with the JSON-safe string \"\\\\n\".",
+									"const blogPostContent = loremParagraphs.replace(/\\n/g, \"\\\\n\")",
+									"",
+									"// Make the result available as a variable for use in the request body",
+									"pm.variables.set('blogPostContent', blogPostContent)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"author\": \"{{$randomUserName}}\",\n    \"title\": \"{{$randomLoremWords}}\",\n    \"slug\": \"{{$randomLoremSlug}}\",\n    \"summary\": \"{{$randomLoremSentences}}\",\n    \"body\": \"{{blogPostContent}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/post",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"post"
+							]
+						},
+						"description": "This request shows an example of generating longer-form content, in this case, a blog post, and transforming mock data as part of a pre-request script.\n\nIn the body, we use dynamic variables to generate a name, a short set of words as a title, a 'slug' (URL-safe textual identifier like \"dolores-est-iusto\"), and a post summary.\n\nIn the pre-request script, we generate some paragraphs of text using `pm.variables.replaceIn`. We then transform this text to make it JSON-safe by replacing newline characters with escaped newline characters and setting the result to a variable we can reference in the body."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	]
+}
