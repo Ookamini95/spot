@@ -6,7 +6,6 @@
 - interagire con altri utenti tramite **commenti, follow e inviti**.
 
 ## Architettura
-- **Frontend:** Angular (presentazione e interazione utente)  
 - **Backend:** Spring Boot (API REST, logica business, accesso ai dati)  
 - **Database:** PostgreSQL + PostGIS (query spaziali e gestione geolocalizzazione)  
 
